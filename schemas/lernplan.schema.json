@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lernplan.schema.json",
+  "title": "Lernplan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "typ",
+    "pruefungstermin",
+    "annahmen",
+    "tage"
+  ],
+  "properties": {
+    "typ": {
+      "const": "lernplan"
+    },
+    "pruefungstermin": {
+      "type": "string",
+      "format": "date"
+    },
+    "annahmen": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tage": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "datum",
+          "themen",
+          "aktion",
+          "minuten"
+        ],
+        "properties": {
+          "datum": {
+            "type": "string",
+            "format": "date"
+          },
+          "themen": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "aktion": {
+            "enum": [
+              "lernen",
+              "quiz",
+              "aufgaben",
+              "wiederholen",
+              "probeklausur",
+              "pause"
+            ]
+          },
+          "minuten": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "abschrift.schema.json",
+  "title": "Abschrift",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "typ",
+    "datei",
+    "seiten"
+  ],
+  "properties": {
+    "typ": {
+      "const": "abschrift"
+    },
+    "datei": {
+      "type": "string"
+    },
+    "seiten": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "seite",
+          "text",
+          "unlesbar"
+        ],
+        "properties": {
+          "seite": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "text": {
+            "type": "string"
+          },
+          "unlesbar": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "fach_vermutet": {
+      "type": "string"
+    },
+    "thema_vermutet": {
+      "type": "string"
+    },
+    "operatoren_gefunden": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "hinweise": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

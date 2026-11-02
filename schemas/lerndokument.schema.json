@@ -1,0 +1,325 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lerndokument.schema.json",
+  "title": "Lerndokument",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "typ",
+    "titel",
+    "fach",
+    "klasse",
+    "lernziel"
+  ],
+  "properties": {
+    "typ": {
+      "enum": [
+        "zusammenfassung",
+        "lernzettel",
+        "arbeitsblatt",
+        "karteikarten",
+        "probeklausur"
+      ]
+    },
+    "titel": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fach": {
+      "type": "string",
+      "minLength": 1
+    },
+    "klasse": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 13
+    },
+    "lernziel": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hinweis": {
+      "type": "string"
+    },
+    "dauer_minuten": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "hilfsmittel": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "abschnitte": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/abschnitt"
+      }
+    },
+    "aufgaben": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/aufgabe"
+      }
+    },
+    "karten": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "vorne",
+          "hinten",
+          "herkunft"
+        ],
+        "properties": {
+          "vorne": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hinten": {
+            "type": "string",
+            "minLength": 1
+          },
+          "beispiel": {
+            "type": "string"
+          },
+          "herkunft": {
+            "$ref": "#/$defs/herkunft"
+          }
+        }
+      }
+    },
+    "selbsttest": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "typ": {
+            "enum": [
+              "zusammenfassung",
+              "lernzettel",
+              "arbeitsblatt"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "selbsttest"
+        ],
+        "properties": {
+          "selbsttest": {
+            "minItems": 3
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "typ": {
+            "enum": [
+              "zusammenfassung",
+              "lernzettel"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "abschnitte"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "typ": {
+            "const": "arbeitsblatt"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "aufgaben"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "typ": {
+            "const": "karteikarten"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "karten"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "typ": {
+            "const": "probeklausur"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "aufgaben",
+          "hinweis",
+          "dauer_minuten"
+        ],
+        "properties": {
+          "aufgaben": {
+            "items": {
+              "required": [
+                "punkte"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "herkunft": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "art"
+      ],
+      "properties": {
+        "art": {
+          "enum": [
+            "material",
+            "ergaenzung",
+            "ungeprueft"
+          ]
+        },
+        "material_id": {
+          "type": "string"
+        },
+        "seite": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "art": {
+                "const": "material"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "material_id",
+              "seite"
+            ]
+          }
+        }
+      ]
+    },
+    "abschnitt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ueberschrift",
+        "text",
+        "herkunft"
+      ],
+      "properties": {
+        "ueberschrift": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "beispiel": {
+          "type": "string"
+        },
+        "herkunft": {
+          "$ref": "#/$defs/herkunft"
+        }
+      }
+    },
+    "aufgabe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nummer",
+        "stellung",
+        "afb",
+        "loesung",
+        "herkunft"
+      ],
+      "properties": {
+        "nummer": {
+          "type": "string"
+        },
+        "stellung": {
+          "type": "string",
+          "minLength": 1
+        },
+        "form": {
+          "enum": [
+            "loesungsbeispiel",
+            "luecken",
+            "frei"
+          ]
+        },
+        "afb": {
+          "enum": [
+            1,
+            2,
+            3
+          ]
+        },
+        "punkte": {
+          "type": "number",
+          "minimum": 0
+        },
+        "loesung": {
+          "type": "string",
+          "minLength": 1
+        },
+        "typische_fehler": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "teilpunkte": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "herkunft": {
+          "$ref": "#/$defs/herkunft"
+        },
+        "andere_wege": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

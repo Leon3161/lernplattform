@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sicherheit.schema.json",
+  "title": "Sicherheitsnachricht",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "typ",
+    "nachricht"
+  ],
+  "properties": {
+    "typ": {
+      "const": "sicherheit"
+    },
+    "nachricht": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

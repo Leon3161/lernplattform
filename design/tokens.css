@@ -1,0 +1,68 @@
+/* Design-Tokens, Startwerte. Kontrast gegen --grund per Skript geprüft (WCAG AA, Text ab 4.5:1).
+   Nicht im Browser gerendert. Stufenwerte sind Vorschläge ohne empirischen Beleg. */
+:root {
+  /* Grund und Text */
+  --grund: oklch(0.985 0.004 240);
+  --flaeche: oklch(1 0 0);
+  --linie: oklch(0.88 0.008 250);
+  --text: oklch(0.22 0.02 255);
+  --text-leise: oklch(0.42 0.02 255);
+
+  /* Fachfarben wie Heftumschläge. Alle erfüllen 4.5:1 auf --grund. */
+  --fach-mathe: oklch(0.48 0.13 250);
+  --fach-deutsch: oklch(0.5 0.18 25);
+  --fach-sprachen: oklch(0.46 0.08 190);
+  --fach-natur: oklch(0.47 0.13 145);
+  --fach-gesellschaft: oklch(0.5 0.1 75);
+  --fach-kunst: oklch(0.48 0.16 340);
+
+  /* Textmarker: nur als Hintergrund hinter --text, nie als Schriftfarbe */
+  --marker: oklch(0.92 0.17 105);
+
+  /* Radius gestuft */
+  --radius-klein: 6px;
+  --radius-mittel: 10px;
+  --radius-gross: 16px;
+
+  /* Bewegung */
+  --dauer-kurz: 120ms;
+  --dauer-mittel: 220ms;
+
+  /* Stufe 8 bis 10 als Standard */
+  --schrift-text: "Schibsted Grotesk", system-ui, sans-serif;
+  --schrift-lang: var(--schrift-text);
+  --groesse-basis: 17px;
+  --tippziel: 44px;
+  --radius-standard: var(--radius-klein);
+}
+
+[data-stufe="1-4"] {
+  --schrift-text: "Andika", system-ui, sans-serif;
+  --groesse-basis: 20px;
+  --tippziel: 56px;
+  --radius-standard: var(--radius-gross);
+}
+
+[data-stufe="5-7"] {
+  --groesse-basis: 18px;
+  --tippziel: 48px;
+  --radius-standard: var(--radius-mittel);
+}
+
+[data-stufe="oberstufe"] {
+  --schrift-lang: "Literata", Georgia, serif;
+  --groesse-basis: 16px;
+}
+
+/* Nutzereinstellung, unabhängig von der Stufe */
+[data-lesehilfe="ein"] {
+  --grund: oklch(0.96 0.03 95);
+  line-height: 1.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dauer-kurz: 0ms;
+    --dauer-mittel: 0ms;
+  }
+}

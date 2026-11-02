@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "quiz.schema.json",
+  "title": "Quiz",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "typ",
+    "thema",
+    "klasse",
+    "fragen"
+  ],
+  "properties": {
+    "typ": {
+      "const": "quiz"
+    },
+    "thema": {
+      "type": "string",
+      "minLength": 1
+    },
+    "klasse": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 13
+    },
+    "fragen": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/frage"
+      }
+    },
+    "hinweis": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "beleg": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "material_id",
+        "seite",
+        "zitat"
+      ],
+      "properties": {
+        "material_id": {
+          "type": "string"
+        },
+        "seite": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "zitat": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    },
+    "option": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "richtig",
+        "hinweis"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "richtig": {
+          "type": "boolean"
+        },
+        "hinweis": {
+          "type": "string"
+        },
+        "fehlvorstellung": {
+          "type": "string"
+        }
+      }
+    },
+    "frage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "art",
+        "stamm",
+        "afb",
+        "herkunft",
+        "erklaerung"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "art": {
+          "enum": [
+            "auswahl",
+            "kurzantwort",
+            "lueckentext",
+            "wahr_falsch",
+            "zuordnen"
+          ]
+        },
+        "stamm": {
+          "type": "string",
+          "minLength": 1
+        },
+        "afb": {
+          "enum": [
+            1,
+            2,
+            3
+          ]
+        },
+        "herkunft": {
+          "enum": [
+            "material",
+            "ergaenzung",
+            "ungeprueft"
+          ]
+        },
+        "beleg": {
+          "$ref": "#/$defs/beleg"
+        },
+        "optionen": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/option"
+          }
+        },
+        "antworten_erlaubt": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "erklaerung": {
+          "type": "string",
+          "minLength": 1
+        },
+        "paare": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "links",
+              "rechts"
+            ],
+            "properties": {
+              "links": {
+                "type": "string"
+              },
+              "rechts": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "wahr": {
+          "type": "boolean"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "herkunft": {
+                "const": "material"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "beleg"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "art": {
+                "const": "auswahl"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "optionen"
+            ],
+            "properties": {
+              "optionen": {
+                "minItems": 3,
+                "maxItems": 5
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "art": {
+                "enum": [
+                  "kurzantwort",
+                  "lueckentext"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "antworten_erlaubt"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "art": {
+                "const": "wahr_falsch"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "wahr"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "art": {
+                "const": "zuordnen"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "paare"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
